@@ -1,68 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.chauthai.swipereveallayout.SwipeRevealLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.chauthai.swipereveallayout.SwipeRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    app:dragEdge="right"
+    android:background="#E5E5E5"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    app:dragEdge="right">
 
     <FrameLayout
-        android:layout_gravity="center_vertical"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="wrap_content"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:paddingEnd="20dp"
+        android:layout_height="match_parent" >
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/call_icon"
-                android:layout_width="wrap_content"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:src="@drawable/ic_call"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_height="wrap_content" />
+            <androidx.cardview.widget.CardView
+                android:layout_marginEnd="15dp"
+                app:cardCornerRadius="5dp"
+                android:layout_width="50dp"
+                android:layout_height="80dp">
 
-            <TextView
-                android:id="@+id/name"
-                android:text="Sanjar Suvonov"
-                android:textSize="18sp"
-                android:textColor="@android:color/black"
-                android:paddingStart="10dp"
-                app:layout_constraintLeft_toRightOf="@id/call_icon"
-                android:layout_width="0dp"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_height="wrap_content" />
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:layout_width="match_parent"
+                    android:background="#F8CA2A"
+                    android:src="@drawable/ic_call"
+                    android:layout_height="match_parent" />
 
-            <TextView
-                android:id="@+id/phone"
-                android:layout_width="0dp"
-                android:text="+99897 007 96 20"
-                android:textSize="15sp"
-                android:textColor="@android:color/black"
-                android:paddingStart="10dp"
-                app:layout_constraintTop_toBottomOf=""
-                app:layout_constraintLeft_toRightOf="@id/call_icon"
-                android:layout_height="wrap_content" />
+            </androidx.cardview.widget.CardView>
 
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/popup_btn"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginEnd="10dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_menu2"
-                android:layout_width="wrap_content"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/name"
-                android:layout_height="wrap_content" />
+            <androidx.cardview.widget.CardView
+                app:cardCornerRadius="5dp"
+                android:layout_width="50dp"
+                android:layout_height="80dp">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:layout_width="match_parent"
+                    android:background="#DD2371"
+                    android:src="@drawable/ic_message1"
+                    android:layout_height="match_parent" />
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="20dp">
+
+
+        <androidx.cardview.widget.CardView
+            app:cardElevation="7dp"
+            app:cardCornerRadius="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:padding="10dp">
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/call_icon"
+                    android:layout_marginStart="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_phone2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:paddingStart="15dp"
+                    android:text="Sanjar Suvonov"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintLeft_toRightOf="@id/call_icon"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/phone"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:paddingStart="10dp"
+                    android:text="+99897 007 96 20"
+                    android:textColor="@android:color/black"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/call_icon"
+                    app:layout_constraintRight_toLeftOf="@id/popup_btn"
+                    app:layout_constraintTop_toBottomOf="@id/name" />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/popup_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="7dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_menu2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
 
 
     </FrameLayout>
