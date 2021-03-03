@@ -1,7 +1,5 @@
 package uz.revolution.permissionscontacthelper.adapter
 
-import android.content.Intent
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +10,10 @@ import uz.revolution.permissionscontacthelper.models.Contact
 
 class ContactAdapter:RecyclerView.Adapter<ContactAdapter.VH>(){
 
-    private var contactList:ArrayList<Contact>?=null
-    var onItemClick:onAdapterItemClick?=null
+    private var contactList: ArrayList<Contact>? = null
+
+    var onCallClick:onAdapterCallClick?=null
+    var onMessageClick:onAdapterMessageClick?=null
 
     fun setAdapter(contactList: ArrayList<Contact>) {
         this.contactList=contactList
@@ -21,14 +21,16 @@ class ContactAdapter:RecyclerView.Adapter<ContactAdapter.VH>(){
 
     inner class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun viewBind(contact: Contact) {
+            itemView.name.text = contact.name
+            itemView.phone.text=contact.phone
             itemView.call_btn.setOnClickListener {
-                if (onItemClick != null) {
-                    onItemClick!!.onCallClick(contact)
+                if (onCallClick != null) {
+                    onCallClick!!.onCallClick(contact)
                 }
             }
             itemView.message_btn.setOnClickListener {
-                if (onItemClick != null) {
-                    onItemClick!!.onMessageClick(contact)
+                if (onMessageClick != null) {
+                    onMessageClick!!.onMessageClick(contact)
                 }
             }
         }
@@ -44,9 +46,11 @@ class ContactAdapter:RecyclerView.Adapter<ContactAdapter.VH>(){
 
     override fun getItemCount(): Int =contactList!!.size
 
-    interface onAdapterItemClick {
+    interface onAdapterCallClick {
 
         fun onCallClick(contact: Contact)
+    }
+    interface onAdapterMessageClick{
 
         fun onMessageClick(contact: Contact)
     }
