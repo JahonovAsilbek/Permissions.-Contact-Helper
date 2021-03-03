@@ -1,57 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.chauthai.swipereveallayout.SwipeRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeLayout"
     android:layout_width="match_parent"
-    android:background="#E5E5E5"
     android:layout_height="wrap_content"
-    app:dragEdge="right">
+    android:background="#E5E5E5"
+    app:dragEdge="right"
+    app:mode="same_level">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
+        android:layout_height="match_parent"
+        android:paddingTop="10dp"
         android:paddingEnd="20dp"
-        android:layout_height="match_parent" >
+        android:paddingBottom="10dp"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/call_btn"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="#F8CA2A"
+            android:background="@drawable/btn_back"
+            android:src="@drawable/ic_call" />
 
-            <androidx.cardview.widget.CardView
-                android:layout_marginEnd="15dp"
-                app:cardCornerRadius="5dp"
-                android:id="@+id/call_btn"
-                android:clickable="true"
-                android:focusable="true"
-                android:layout_width="50dp"
-                android:layout_height="80dp">
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/message_btn"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/btn_back"
+            android:backgroundTint="#DD2371"
+            android:src="@drawable/ic_message1" />
 
-                <androidx.appcompat.widget.AppCompatImageButton
-                    android:layout_width="match_parent"
-                    android:background="#F8CA2A"
-                    android:src="@drawable/ic_call"
-                    android:layout_height="match_parent" />
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                app:cardCornerRadius="5dp"
-                android:layout_width="50dp"
-                android:id="@+id/message_btn"
-                android:layout_height="80dp">
-
-                <androidx.appcompat.widget.AppCompatImageButton
-                    android:layout_width="match_parent"
-                    android:background="#DD2371"
-                    android:src="@drawable/ic_message1"
-                    android:layout_height="match_parent" />
-
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
-
-    </FrameLayout>
+    </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -60,32 +42,36 @@
         android:backgroundTint="#E5E5E5"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="20dp">
+        android:paddingStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="10dp">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:background="#E5E5E5"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="#E5E5E5">
+
             <androidx.cardview.widget.CardView
-                app:cardElevation="7dp"
-                app:cardCornerRadius="5dp"
-                android:outlineSpotShadowColor="#E5E5E5"
-                android:background="#E5E5E5"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="#E5E5E5"
+                android:outlineSpotShadowColor="#E5E5E5"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="7dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:background="#fff"
                     android:layout_height="80dp"
+                    android:background="#fff"
                     android:padding="10dp">
 
                     <androidx.appcompat.widget.AppCompatImageButton
                         android:id="@+id/call_icon"
-                        android:layout_marginStart="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
                         android:background="@android:color/transparent"
                         android:src="@drawable/ic_phone2"
                         app:layout_constraintBottom_toBottomOf="parent"

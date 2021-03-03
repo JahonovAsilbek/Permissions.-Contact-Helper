@@ -87,7 +87,7 @@
         app:layout_constraintTop_toBottomOf="@id/cardview1">
 
         <EditText
-            android:id="@+id/add_bootcamp_text"
+            android:id="@+id/message"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@null"
