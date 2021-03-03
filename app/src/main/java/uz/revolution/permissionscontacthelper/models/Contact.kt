@@ -16,4 +16,9 @@ class Contact {
 
     @ColumnInfo(name = "phone")
     var phone:String?=null
+
+    constructor(name: String?, phone: String?) {
+        this.name = name
+        this.phone = phone
+    }
 }
