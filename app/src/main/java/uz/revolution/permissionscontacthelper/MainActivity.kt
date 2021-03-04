@@ -22,23 +22,19 @@ class MainActivity : AppCompatActivity() {
     private var adapter: ContactAdapter? = null
     var requestCode = 1
     private var contactList: ArrayList<Contact>? = null
-    private var database:AppDatabase?=null
-    private var contactDao:ContactDAO?=null
+    private var database: AppDatabase? = null
+    private var contactDao: ContactDAO? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        Thread(Runnable {
-            loadDatabase()
-            loadData()
-            checkCallPermission()
-            onMessageClick()
-            getAllContacts()
-            runOnUiThread {
-                loadAdapters()
-            }
-        }).start()
+        loadDatabase()
+        loadData()
+        checkCallPermission()
+        onMessageClick()
+        getAllContacts()
+        loadAdapters()
 
     }
 
@@ -48,13 +44,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadDatabase() {
-        database=AppDatabase.get.getDatabase()
-        contactDao=database!!.getContactDao()
+        database = AppDatabase.get.getDatabase()
+        contactDao = database!!.getContactDao()
     }
 
     private fun getAllContacts() {
         var name = ""
-        var phoneNo=""
+        var phoneNo = ""
         if (ContextCompat.checkSelfPermission(
                 this@MainActivity,
                 Manifest.permission.READ_CONTACTS
@@ -67,48 +63,48 @@ class MainActivity : AppCompatActivity() {
                 null, null, null, null
             )
 
-                if ((cur?.count ?: 0) > 0) {
-                    while (cur != null && cur.moveToNext()) {
-                        val id: String = cur.getString(
-                            cur.getColumnIndex(ContactsContract.Contacts._ID)
+            if ((cur?.count ?: 0) > 0) {
+                while (cur != null && cur.moveToNext()) {
+                    val id: String = cur.getString(
+                        cur.getColumnIndex(ContactsContract.Contacts._ID)
+                    )
+                    name = cur.getString(
+                        cur.getColumnIndex(
+                            ContactsContract.Contacts.DISPLAY_NAME
                         )
-                        name= cur.getString(
+                    )
+                    if (cur.getInt(
                             cur.getColumnIndex(
-                                ContactsContract.Contacts.DISPLAY_NAME
+                                ContactsContract.Contacts.HAS_PHONE_NUMBER
                             )
+                        ) > 0
+                    ) {
+                        val pCur: Cursor? = cr.query(
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                            arrayOf(id),
+                            null
                         )
-                        if (cur.getInt(
-                                cur.getColumnIndex(
-                                    ContactsContract.Contacts.HAS_PHONE_NUMBER
-                                )
-                            ) > 0
-                        ) {
-                            val pCur: Cursor? = cr.query(
-                                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                                null,
-                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                                arrayOf(id),
-                                null
-                            )
 
-                            while (pCur!!.moveToNext()) {
-                                phoneNo = pCur.getString(
-                                    pCur.getColumnIndex(
-                                        ContactsContract.CommonDataKinds.Phone.NUMBER
-                                    )
+                        while (pCur!!.moveToNext()) {
+                            phoneNo = pCur.getString(
+                                pCur.getColumnIndex(
+                                    ContactsContract.CommonDataKinds.Phone.NUMBER
                                 )
+                            )
 //                                if (contactDao!!.getAllContacts().isEmpty()) {
 //                                    contactDao?.insertContact(Contact(name,phoneNo))
-                                    contactList?.add(Contact(name, phoneNo))
+                            contactList?.add(Contact(name, phoneNo))
 //                                }
-                            }
-
-                            pCur.close()
-
                         }
+
+                        pCur.close()
+
                     }
-                    cur?.close()
                 }
+                cur?.close()
+            }
 
         } else {
             ActivityCompat.requestPermissions(
@@ -135,8 +131,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadData() {
         contactList = ArrayList()
-        contactList?.add(Contact("Sanjar Suvonov", "+998970079620"))
-        contactList?.add(Contact("Asilbek Jahonov", "+998909920850"))
 //        contactList?.addAll(contactDao!!.getAllContacts())
     }
 
