@@ -29,12 +29,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        loadDatabase()
-        loadData()
+        Thread(Runnable {
+            loadDatabase()
+            loadData()
+            checkCallPermission()
+            onMessageClick()
+            getAllContacts()
+            runOnUiThread {
+                loadAdapters()
+            }
+        }).start()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
         loadAdapters()
-        checkCallPermission()
-        onMessageClick()
-        getAllContacts()
     }
 
     private fun loadDatabase() {
