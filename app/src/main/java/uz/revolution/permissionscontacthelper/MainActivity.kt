@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         loadAdapters()
         onMessageClick()
+        makeCall()
     }
 
     private fun loadDatabase() {
