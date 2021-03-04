@@ -46,7 +46,14 @@ class SendMessageFragment : Fragment() {
         root = inflater.inflate(R.layout.fragment_send_message, container, false)
         loadDataToView()
         checkSmsPermission()
+        backClick()
         return root
+    }
+
+    private fun backClick() {
+        root.back_btn.setOnClickListener {
+            fragmentManager?.popBackStack()
+        }
     }
 
     private fun checkSmsPermission() {
@@ -105,7 +112,7 @@ class SendMessageFragment : Fragment() {
                     val sms: SmsManager = SmsManager.getDefault()
                     sms.sendTextMessage(phone, null, message, null, null)
                     Snackbar.make(root, "Xabar jo'natildi", Snackbar.LENGTH_LONG).show()
-                    childFragmentManager.popBackStack()
+                    fragmentManager?.popBackStack()
                 } else {
                     Snackbar.make(root,"Bo'sh xabar jo'natib bo'lmaydi",Snackbar.LENGTH_LONG).show()
                 }
