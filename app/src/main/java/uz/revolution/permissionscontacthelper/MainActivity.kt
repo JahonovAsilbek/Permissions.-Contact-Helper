@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         loadAdapters()
+        onMessageClick()
     }
 
     private fun loadDatabase() {
