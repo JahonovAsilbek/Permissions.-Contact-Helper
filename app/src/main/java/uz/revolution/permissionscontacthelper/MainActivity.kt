@@ -186,6 +186,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == this.requestCode) {
             if (grantResults.size == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 getAllContacts()
+                loadAdapters()
                 makeCall()
             } else {
 
