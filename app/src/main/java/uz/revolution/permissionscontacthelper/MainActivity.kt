@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        adapter = ContactAdapter()
         loadDatabase()
         loadData()
         checkCallPermission()
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        loadData()
         loadAdapters()
         onMessageClick()
         makeCall()
@@ -56,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         if (ContextCompat.checkSelfPermission(
                 this@MainActivity,
                 Manifest.permission.READ_CONTACTS
-            ) == PackageManager.PERMISSION_GRANTED
+            ) == PackageManager.PERMISSION_GRANTED && contactDao!!.getAllContacts().isEmpty()
         ) {
 
             val cr = contentResolver
@@ -65,7 +67,7 @@ class MainActivity : AppCompatActivity() {
                 null, null, null, null
             )
 
-            if ((cur?.count ?: 0) > 0) {
+            if ((cur?.count ?: 0) > 0 && contactDao!!.getAllContacts().isEmpty()) {
                 while (cur != null && cur.moveToNext()) {
                     val id: String = cur.getString(
                         cur.getColumnIndex(ContactsContract.Contacts._ID)
@@ -97,7 +99,9 @@ class MainActivity : AppCompatActivity() {
                             )
 //                                if (contactDao!!.getAllContacts().isEmpty()) {
 //                                    contactDao?.insertContact(Contact(name,phoneNo))
-                            contactList?.add(Contact(name, phoneNo))
+//                            contactList?.clear()
+//                            contactList?.add(Contact(name, phoneNo))
+                                contactDao?.insertContact(Contact(name,phoneNo))
 //                                }
                         }
 
@@ -133,6 +137,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadData() {
         contactList = ArrayList()
+        contactList=contactDao?.getAllContacts() as ArrayList
 //        contactList?.addAll(contactDao!!.getAllContacts())
     }
 
@@ -201,7 +206,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadAdapters() {
-        adapter = ContactAdapter()
         adapter?.setAdapter(contactList!!)
         contacts_rv.adapter = adapter
     }
