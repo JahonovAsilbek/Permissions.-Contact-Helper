@@ -117,6 +117,7 @@
             android:id="@+id/send_message"
             android:layout_width="match_parent"
             android:layout_height="70dp"
+            android:foreground="?selectableItemBackground"
             android:background="#DD2371"
             android:text="Xabarni yuborish"
             android:textAllCaps="false"

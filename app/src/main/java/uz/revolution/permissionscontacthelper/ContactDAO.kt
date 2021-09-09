@@ -11,7 +11,7 @@ interface ContactDAO {
     @Insert
     fun insertContact(contact: Contact)
 
-    @Query("SELECT * FROM contact")
+    @Query("SELECT * FROM contact order by name")
     fun getAllContacts():List<Contact>
 
 }

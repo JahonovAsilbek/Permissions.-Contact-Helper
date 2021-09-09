@@ -10,8 +10,8 @@ import android.os.Bundle
 import android.provider.ContactsContract
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.github.florent37.runtimepermission.kotlin.askPermission
 import kotlinx.android.synthetic.main.activity_main.*
 import uz.revolution.permissionscontacthelper.adapter.ContactAdapter
 import uz.revolution.permissionscontacthelper.database.AppDatabase
@@ -20,7 +20,6 @@ import uz.revolution.permissionscontacthelper.models.Contact
 
 class MainActivity : AppCompatActivity() {
     private var adapter: ContactAdapter? = null
-    var requestCode = 1
     private var contactList: ArrayList<Contact>? = null
     private var database: AppDatabase? = null
     private var contactDao: ContactDAO? = null
@@ -28,13 +27,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         adapter = ContactAdapter()
         loadDatabase()
         loadData()
         checkCallPermission()
         onMessageClick()
-        getAllContacts()
         loadAdapters()
 
     }
@@ -43,8 +40,6 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         loadData()
         loadAdapters()
-        onMessageClick()
-        makeCall()
     }
 
     private fun loadDatabase() {
@@ -55,11 +50,7 @@ class MainActivity : AppCompatActivity() {
     private fun getAllContacts() {
         var name = ""
         var phoneNo = ""
-        if (ContextCompat.checkSelfPermission(
-                this@MainActivity,
-                Manifest.permission.READ_CONTACTS
-            ) == PackageManager.PERMISSION_GRANTED && contactDao!!.getAllContacts().isEmpty()
-        ) {
+        if (contactDao!!.getAllContacts().isEmpty()) {
 
             val cr = contentResolver
             val cur: Cursor? = cr.query(
@@ -67,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                 null, null, null, null
             )
 
-            if ((cur?.count ?: 0) > 0 && contactDao!!.getAllContacts().isEmpty()) {
+            if ((cur?.count ?: 0) > 0) {
                 while (cur != null && cur.moveToNext()) {
                     val id: String = cur.getString(
                         cur.getColumnIndex(ContactsContract.Contacts._ID)
@@ -97,28 +88,14 @@ class MainActivity : AppCompatActivity() {
                                     ContactsContract.CommonDataKinds.Phone.NUMBER
                                 )
                             )
-//                                if (contactDao!!.getAllContacts().isEmpty()) {
-//                                    contactDao?.insertContact(Contact(name,phoneNo))
-//                            contactList?.clear()
-//                            contactList?.add(Contact(name, phoneNo))
-                                contactDao?.insertContact(Contact(name,phoneNo))
-//                                }
+                            contactDao?.insertContact(Contact(name, phoneNo))
                         }
-
-                        pCur.close()
-
                     }
                 }
-                cur?.close()
+                cur?.let {
+                    it.close()
+                }
             }
-
-        } else {
-            ActivityCompat.requestPermissions(
-                this@MainActivity,
-                arrayOf(Manifest.permission.READ_CONTACTS),
-                requestCode
-            )
-            return
         }
     }
 
@@ -137,76 +114,43 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadData() {
         contactList = ArrayList()
-        contactList=contactDao?.getAllContacts() as ArrayList
+        contactList = contactDao?.getAllContacts() as ArrayList
 //        contactList?.addAll(contactDao!!.getAllContacts())
     }
 
     private fun checkCallPermission() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CALL_PHONE
-            ) == PackageManager.PERMISSION_GRANTED
+        askPermission(
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.CALL_PHONE,
+            Manifest.permission.SEND_SMS
         ) {
+            //all permissions already granted or just granted
             getAllContacts()
             makeCall()
-        } else {
-            requestSmsPermission()
-        }
-    }
 
-    private fun requestSmsPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(
-                this,
-                Manifest.permission.CALL_PHONE
-            )
-            && ActivityCompat.shouldShowRequestPermissionRationale(
-                this,
-                Manifest.permission.READ_CONTACTS
-            )
-        ) {
-            val dialog = AlertDialog.Builder(this)
-            dialog.setTitle("Permission required")
-            dialog.setMessage("Permission to access the call is required")
-            dialog.setPositiveButton(
-                "OK"
-            ) { p0, p1 ->
-                ActivityCompat.requestPermissions(
-                    this, arrayOf(
-                        Manifest.permission.CALL_PHONE,
-                        Manifest.permission.READ_CONTACTS
-                    ), requestCode
-                )
+        }.onDeclined { e ->
+            if (e.hasDenied()) {
+
+                AlertDialog.Builder(this)
+                    .setMessage("Please accept our permissions")
+                    .setPositiveButton("yes") { dialog, which ->
+                        e.askAgain();
+                    } //ask again
+                    .setNegativeButton("no") { dialog, which ->
+                        dialog.dismiss();
+                    }
+                    .show();
             }
-            val alertDialog = dialog.create()
-            alertDialog.show()
-        } else {
-            ActivityCompat.requestPermissions(
-                this, arrayOf(
-                    Manifest.permission.CALL_PHONE,
-                    Manifest.permission.READ_CONTACTS
-                ), requestCode
-            )
-        }
-    }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == this.requestCode) {
-            if (grantResults.size == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                getAllContacts()
-                loadAdapters()
-                makeCall()
-            } else {
-
+            if (e.hasForeverDenied()) {
+                // you need to open setting manually if you really need it
+                e.goToSettings();
             }
         }
     }
 
     private fun loadAdapters() {
-        adapter?.setAdapter(contactList!!)
+        contactList?.let { adapter?.setAdapter(it) }
         contacts_rv.adapter = adapter
     }
 
@@ -223,11 +167,7 @@ class MainActivity : AppCompatActivity() {
                     intent.data = Uri.parse("tel:$numberText")
                     startActivity(intent)
                 } else {
-                    ActivityCompat.requestPermissions(
-                        this@MainActivity,
-                        arrayOf(Manifest.permission.CALL_PHONE),
-                        requestCode
-                    )
+                    checkCallPermission()
                     return
                 }
             }
